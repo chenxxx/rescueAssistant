@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+
+target 'rescueAssistant' do
+pod 'AFNetworking', '~> 3.0'
+pod 'RESideMenu', '~> 4.0.7'
+pod 'MBProgressHUD', '~> 1.0.0'
+pod 'MJRefresh'
+pod 'BmobSDK'
+
+end
