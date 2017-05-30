@@ -8,6 +8,8 @@
 
 #import "LocationsCell.h"
 #import "Locations.h"
+#import <UIKit+AFNetworking.h>
+#import "MJRefresh.h"
 
 @interface LocationsCell ()
 
@@ -71,24 +73,21 @@
 -(void)setLocations:(Locations *)locations{
     _locations=locations;
     [self settingFrame];
-  //  [self settingData];
+    [self settingData];
 }
 
-/*
+
  -(void)settingData{
-    NSURL *url=[NSURL URLWithString:_news.portrait];
+ 
+     NSURL *url=[NSURL URLWithString:_locations.portrait];
     [self.portraitV setImageWithURL:url placeholderImage:[UIImage imageNamed:@"headImg"]];
-    self.titleV.text=_news.title;
-    
-    
-    self.textV.text=[_news.text substringToIndex:30];
-    
-    self.footerV.text=_news.time;
-    
-    
-    
+    self.nameV.text=_locations.name;
+    self.longitudeV.text= [NSString stringWithFormat:@"%@",_locations.longitude];;
+    self.latitudeV.text= [NSString stringWithFormat:@"%@",_locations.latitude];;
+    self.distanceV.text=_locations.distance;
+     
 }
-*/
+
 
 -(void)settingFrame{
     
@@ -98,21 +97,10 @@
     CGFloat textW=([UIScreen mainScreen].bounds.size.width)-3*margin-portraitW;
     
     self.portraitV.frame=CGRectMake(margin, margin, portraitW, portraitH);
-    
     self.nameV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin, textW, 20);
-    
-  //  NSDictionary *attr=@{NSFontAttributeName:[UIFont systemFontOfSize:15]};
-    
- //   CGSize textSize=   [[_locations.name substringToIndex:30] boundingRectWithSize:CGSizeMake(textW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:attr context:nil].size;
-    self.longitudeV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+20, textW, 20);
-    self.latitudeV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+40, textW, 20);
-    self.distanceV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+60, textW, 20);
- //   self.textV.numberOfLines=0;
-    
-    
- //   self.footerV.frame=CGRectMake(108+margin, CGRectGetMaxY(self.portraitV.frame)-25, SCREEN_WIDTH-3*margin-portraitW, 20);
-    
-    
+    self.longitudeV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+25, textW, 20);
+    self.latitudeV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+50, textW, 20);
+    self.distanceV.frame=CGRectMake(CGRectGetMaxX(self.portraitV.frame)+margin, margin+75, textW, 20);
     
 }
 

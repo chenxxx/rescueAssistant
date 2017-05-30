@@ -17,28 +17,68 @@
 #import "Locations.h"
 #import "LocationsCell.h"
 
+@interface MyLocationViewController()
+
+@property(nonatomic,strong)NSMutableArray *locationsList;
+//@property(nonatomic)NSInteger index;
+@property (strong,nonatomic) NSString *plistPath;
+
+@end
+
 @implementation MyLocationViewController
+
 - (void)viewDidLoad{
-    [self loadData];
+    [super viewDidLoad];
+    
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
+    [self.tableView.mj_header beginRefreshing];
+    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [path objectAtIndex:0];
+    self.plistPath = [documentsPath stringByAppendingPathComponent:@"Locations.plist"];
+
+    self.tableView.backgroundColor=[UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1];
+    self.tableView.rowHeight=125;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+
 }
+
 - (void)viewDidAppear:(BOOL)animated{
 
 }
 
-- (void)loadData{
-    BmobQuery   *bquery = [BmobQuery queryWithClassName:@"Device"];
-    NSMutableArray *arrM=[NSMutableArray array];
-    [bquery findObjectsInBackgroundWithBlock:^(NSArray *array, NSError *error) {
-        for (BmobObject *obj in array) {
-            Locations *model=[Locations locationsWithDict:obj];
+-(NSMutableArray *)locationsList{
+    if (_locationsList==nil) {
+
+        _locationsList=[NSMutableArray arrayWithContentsOfFile:_plistPath];
+        NSMutableArray *arrM=[NSMutableArray array];
+        for (NSDictionary *dict in  _locationsList) {
+            Locations *model=[Locations  locationsWithDict:dict];
             [arrM addObject:model];
-            //打印playerName
-            NSLog(@"obj.playerName = %@", [obj objectForKey:@"playerName"]);
-            //打印objectId,createdAt,updatedAt
-            NSLog(@"obj.objectId = %@", [obj objectId]);
-            NSLog(@"obj.createdAt = %@", [obj createdAt]);
-            NSLog(@"obj.updatedAt = %@", [obj updatedAt]);
         }
-    }];
+        _locationsList=arrM;
+    }
+    return _locationsList;
 }
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.locationsList.count;
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    LocationsCell *cell=[LocationsCell cellWithTableView:tableView];
+    cell.locations=self.locationsList[indexPath.row];
+    
+    return cell;
+}
+
+-(void)refresh{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+        [self.tableView.mj_header endRefreshing];
+    });
+    
+}
+
 @end

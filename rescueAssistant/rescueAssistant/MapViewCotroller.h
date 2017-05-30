@@ -13,9 +13,7 @@
 @interface MapViewCotroller : UIViewController <MKMapViewDelegate,CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UILabel *jing;
-@property (weak, nonatomic) IBOutlet UILabel *wei;
-@property (weak, nonatomic) IBOutlet UILabel *gao;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
 - (CLLocation *)getMyLocation;
